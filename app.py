@@ -27,24 +27,45 @@ st.set_page_config(
 # --- カスタムCSS ---
 st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=M+PLUS+1p:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
 <style>
+    :root {
+        --teal: #2AACB8;
+        --teal-dark: #1E8E99;
+        --teal-deep: #16737D;
+        --teal-light: #E7F5F7;
+        --teal-pale: #F2FAFB;
+        --navy: #1A3040;
+        --navy-light: #2D4A5C;
+        --text-muted: #5D8090;
+        --border: #D0E4E8;
+        --border-light: #E8F0F2;
+        --white: #FFFFFF;
+        --bg: #F7FBFC;
+        --success: #10B981;
+        --error: #EF4444;
+    }
+
     /* ===== Base ===== */
     .stApp {
-        max-width: 1100px;
-        margin: 0 auto;
-        font-family: 'Noto Sans JP', 'Plus Jakarta Sans', sans-serif;
+        font-family: 'M PLUS 1p', sans-serif !important;
+    }
+    .stMainBlockContainer {
+        max-width: 1060px;
     }
     h1, h2, h3, h4 {
-        font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif !important;
-        letter-spacing: -0.02em;
+        font-family: 'Zen Maru Gothic', 'M PLUS 1p', sans-serif !important;
+    }
+    .stApp p, .stApp span, .stApp label, .stApp div {
+        font-family: 'M PLUS 1p', sans-serif;
     }
 
     /* ===== Hero Header ===== */
     .hero-header {
-        background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
-        border-radius: 16px;
-        padding: 2rem 2.5rem;
+        background: linear-gradient(135deg, #1A9EAB 0%, #2AACB8 40%, #5DC4CE 100%);
+        border-radius: 18px;
+        padding: 2.25rem 2.5rem;
         margin-bottom: 1.5rem;
         position: relative;
         overflow: hidden;
@@ -52,134 +73,206 @@ st.markdown("""
     .hero-header::before {
         content: '';
         position: absolute;
-        top: -50%;
-        right: -20%;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+        top: -60%;
+        right: -15%;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .hero-header::after {
+        content: '';
+        position: absolute;
+        bottom: -40%;
+        left: 10%;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
         border-radius: 50%;
     }
     .hero-header h1 {
-        color: #F8FAFC;
-        font-size: 1.75rem;
+        color: #FFFFFF;
+        font-size: 1.6rem;
         font-weight: 700;
-        margin: 0 0 0.25rem 0;
+        margin: 0 0 0.35rem 0;
         position: relative;
+        letter-spacing: 0.01em;
     }
     .hero-header p {
-        color: #94A3B8;
-        font-size: 0.9rem;
+        color: rgba(255,255,255,0.82);
+        font-size: 0.88rem;
         margin: 0;
         position: relative;
+        font-family: 'M PLUS 1p', sans-serif;
     }
     .hero-badge {
-        display: inline-block;
-        background: rgba(99,102,241,0.2);
-        color: #A5B4FC;
-        font-size: 0.7rem;
-        font-weight: 600;
-        padding: 0.2rem 0.6rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba(255,255,255,0.18);
+        color: #FFFFFF;
+        font-size: 0.68rem;
+        font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
+        padding: 0.25rem 0.7rem;
         border-radius: 100px;
-        margin-bottom: 0.75rem;
-        letter-spacing: 0.05em;
+        margin-bottom: 0.85rem;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
+        backdrop-filter: blur(4px);
+    }
+    .hero-badge .material-symbols-rounded {
+        font-size: 14px;
+    }
+
+    /* ===== Section Labels ===== */
+    .section-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--teal-dark);
+        font-family: 'Zen Maru Gothic', sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        margin-bottom: 0.5rem;
+    }
+    .section-label .material-symbols-rounded {
+        font-size: 20px;
+        color: var(--teal);
     }
 
     /* ===== Mode Selector ===== */
     div[data-testid="stSegmentedControl"] button {
-        font-family: 'Noto Sans JP', sans-serif !important;
-        font-weight: 600 !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+        font-weight: 700 !important;
         font-size: 0.85rem !important;
         border-radius: 10px !important;
         padding: 0.5rem 1.25rem !important;
+        transition: all 0.15s ease;
     }
-
-    /* ===== Cards ===== */
-    .upload-card {
-        background: #FFFFFF;
-        border: 1.5px dashed #CBD5E1;
-        border-radius: 14px;
-        padding: 1.5rem;
-        transition: border-color 0.2s;
-    }
-    .upload-card:hover {
-        border-color: #6366F1;
+    div[data-testid="stSegmentedControl"] button[aria-pressed="true"] {
+        background: var(--teal) !important;
+        color: white !important;
     }
 
     /* ===== Progress Pipeline ===== */
     .pipeline-container {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 14px;
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 16px;
         padding: 1.25rem 1.5rem;
         margin: 1rem 0;
     }
     .pipeline-step {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.6rem 0;
-        font-size: 0.9rem;
-        color: #64748B;
+        gap: 0.85rem;
+        padding: 0.55rem 0;
+        font-size: 0.88rem;
+        font-family: 'M PLUS 1p', sans-serif;
+        color: var(--text-muted);
         transition: all 0.2s;
     }
-    .pipeline-step.done { color: #0F172A; font-weight: 500; }
-    .pipeline-step.running { color: #6366F1; font-weight: 600; }
-    .pipeline-step.error { color: #EF4444; }
-    .step-dot {
-        width: 28px;
-        height: 28px;
+    .pipeline-step.done { color: var(--navy); font-weight: 500; }
+    .pipeline-step.running { color: var(--teal-dark); font-weight: 700; }
+    .pipeline-step.error { color: var(--error); }
+    .step-num {
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
         flex-shrink: 0;
+        transition: all 0.3s;
     }
-    .dot-pending { background: #F1F5F9; color: #94A3B8; border: 2px solid #E2E8F0; }
-    .dot-running { background: #EEF2FF; color: #6366F1; border: 2px solid #6366F1; animation: pulse 1.5s infinite; }
-    .dot-done { background: #6366F1; color: white; border: 2px solid #6366F1; }
-    .dot-error { background: #FEF2F2; color: #EF4444; border: 2px solid #EF4444; }
-    @keyframes pulse {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.3); }
-        50% { box-shadow: 0 0 0 6px rgba(99,102,241,0); }
+    .num-pending {
+        background: var(--teal-pale);
+        color: var(--text-muted);
+        border: 2px solid var(--border);
+    }
+    .num-running {
+        background: var(--teal-light);
+        color: var(--teal-dark);
+        border: 2px solid var(--teal);
+        animation: teal-pulse 1.8s ease-in-out infinite;
+    }
+    .num-done {
+        background: var(--teal);
+        color: var(--white);
+        border: 2px solid var(--teal);
+    }
+    .num-done .material-symbols-rounded {
+        font-size: 16px;
+    }
+    .num-error {
+        background: #FEF2F2;
+        color: var(--error);
+        border: 2px solid var(--error);
+    }
+    @keyframes teal-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(42,172,184,0.35); }
+        50% { box-shadow: 0 0 0 7px rgba(42,172,184,0); }
     }
     .step-connector {
         width: 2px;
-        height: 12px;
-        background: #E2E8F0;
-        margin-left: 13px;
+        height: 10px;
+        background: var(--border);
+        margin-left: 14px;
+        border-radius: 1px;
+        transition: background 0.3s;
     }
-    .step-connector.done { background: #6366F1; }
+    .step-connector.done { background: var(--teal); }
 
     /* ===== Metrics ===== */
     div[data-testid="stMetric"] {
-        background: #FFFFFF;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        padding: 1.1rem 1.25rem;
+        box-shadow: 0 1px 4px rgba(42,172,184,0.06);
     }
     div[data-testid="stMetric"] label {
-        font-size: 0.75rem !important;
-        color: #64748B !important;
+        font-size: 0.72rem !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+        color: var(--text-muted) !important;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 0.06em;
+    }
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+        font-family: 'DM Sans', 'M PLUS 1p', sans-serif !important;
+        color: var(--navy) !important;
     }
 
     /* ===== Link Buttons ===== */
     .stLinkButton a {
-        border-radius: 10px !important;
+        border-radius: 12px !important;
         font-weight: 600 !important;
         font-size: 0.85rem !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+        border: 1.5px solid var(--teal) !important;
+        color: var(--teal-dark) !important;
+        transition: all 0.15s;
+    }
+    .stLinkButton a:hover {
+        background: var(--teal-light) !important;
     }
 
     /* ===== Sidebar ===== */
     section[data-testid="stSidebar"] {
-        background: #0F172A;
+        background: linear-gradient(180deg, #F2FAFB 0%, #E7F5F7 100%);
+        border-right: 1.5px solid var(--border);
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3 {
+        color: var(--navy) !important;
     }
     section[data-testid="stSidebar"] * {
-        color: #E2E8F0 !important;
+        color: var(--navy-light) !important;
     }
     section[data-testid="stSidebar"] .stAlert p {
         font-size: 0.8rem !important;
@@ -187,44 +280,112 @@ st.markdown("""
 
     /* ===== Tabs ===== */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 0.5rem;
+        gap: 0.25rem;
+        border-bottom: 2px solid var(--border-light);
     }
     .stTabs [data-baseweb="tab"] {
         border-radius: 10px 10px 0 0 !important;
         font-weight: 600 !important;
-        font-size: 0.8rem !important;
+        font-size: 0.82rem !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+    }
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        color: var(--teal-dark) !important;
+        border-bottom-color: var(--teal) !important;
     }
 
     /* ===== File Uploader ===== */
-    div[data-testid="stFileUploader"] {
-        border-radius: 12px;
-    }
     div[data-testid="stFileUploader"] section {
-        border-radius: 12px !important;
-        border: 1.5px dashed #CBD5E1 !important;
+        border-radius: 14px !important;
+        border: 2px dashed var(--border) !important;
         padding: 1.25rem !important;
+        background: var(--teal-pale) !important;
+        transition: border-color 0.2s;
+    }
+    div[data-testid="stFileUploader"] section:hover {
+        border-color: var(--teal) !important;
     }
 
-    /* ===== Button ===== */
+    /* ===== Primary Button ===== */
     .stButton > button[kind="primary"] {
-        border-radius: 12px !important;
+        background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%) !important;
+        border: none !important;
+        border-radius: 14px !important;
+        font-family: 'Zen Maru Gothic', sans-serif !important;
         font-weight: 700 !important;
         font-size: 1rem !important;
-        padding: 0.75rem !important;
-        letter-spacing: 0.02em;
-        box-shadow: 0 4px 14px rgba(99,102,241,0.25);
+        padding: 0.8rem !important;
+        letter-spacing: 0.04em;
+        color: white !important;
+        box-shadow: 0 4px 14px rgba(42,172,184,0.3);
         transition: all 0.2s;
     }
     .stButton > button[kind="primary"]:hover {
-        box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+        box-shadow: 0 6px 22px rgba(42,172,184,0.4);
         transform: translateY(-1px);
+    }
+    .stButton > button[kind="primary"]:active {
+        transform: translateY(0px);
     }
 
     /* ===== Download Button ===== */
     .stDownloadButton > button {
         border-radius: 10px !important;
         font-weight: 600 !important;
-        border: 1.5px solid #E2E8F0 !important;
+        border: 1.5px solid var(--border) !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+    }
+
+    /* ===== Text Input ===== */
+    .stTextInput input {
+        border-radius: 10px !important;
+        border: 1.5px solid var(--border) !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+    }
+    .stTextInput input:focus {
+        border-color: var(--teal) !important;
+        box-shadow: 0 0 0 2px rgba(42,172,184,0.15) !important;
+    }
+    .stTextArea textarea {
+        border-radius: 10px !important;
+        border: 1.5px solid var(--border) !important;
+        font-family: 'M PLUS 1p', sans-serif !important;
+    }
+    .stTextArea textarea:focus {
+        border-color: var(--teal) !important;
+        box-shadow: 0 0 0 2px rgba(42,172,184,0.15) !important;
+    }
+
+    /* ===== Divider ===== */
+    hr {
+        border-color: var(--border-light) !important;
+    }
+
+    /* ===== Completion Banner ===== */
+    .completion-banner {
+        background: linear-gradient(135deg, #E7F5F7 0%, #D4F0F3 100%);
+        border: 1.5px solid var(--teal);
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .completion-banner .material-symbols-rounded {
+        font-size: 22px;
+        color: var(--teal-dark);
+    }
+    .completion-banner span {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--teal-deep);
+        font-family: 'Zen Maru Gothic', sans-serif;
+    }
+
+    /* ===== Warning override ===== */
+    .stAlert [data-testid="stNotificationContentWarning"] {
+        font-family: 'M PLUS 1p', sans-serif !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -263,10 +424,15 @@ def get_step_icon(step_name: str) -> str:
 
 # --- サイドバー ---
 with st.sidebar:
-    st.title("⚙️ 出力設定")
+    st.markdown("""
+    <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
+        <span class="material-symbols-rounded" style="font-size:22px; color:#1E8E99;">tune</span>
+        <span style="font-family:'Zen Maru Gothic',sans-serif; font-weight:700; font-size:1.1rem; color:#1A3040;">出力設定</span>
+    </div>
+    """, unsafe_allow_html=True)
 
-    enable_notion = st.toggle("📝 Notionに出力", value=False)
-    enable_miro = st.toggle("🗺️ Miroにフロー描画", value=False)
+    enable_notion = st.toggle("Notionに出力", value=False)
+    enable_miro = st.toggle("Miroにフロー描画", value=False)
 
     if enable_notion or enable_miro:
         st.divider()
@@ -287,7 +453,10 @@ with st.sidebar:
 # --- メインUI ---
 st.markdown("""
 <div class="hero-header">
-    <div class="hero-badge">AI-Powered</div>
+    <div class="hero-badge">
+        <span class="material-symbols-rounded">auto_awesome</span>
+        AI-Powered
+    </div>
     <h1>Manual Studio</h1>
     <p>議事録・MTG文字起こしから、ルール準拠のマニュアルを自動生成 → Notion / Miro に出力</p>
 </div>
@@ -307,7 +476,7 @@ col_input, col_options = st.columns([3, 1])
 
 with col_input:
     if mode == "新規作成":
-        st.subheader("📎 議事録をアップロード")
+        st.markdown('<div class="section-label"><span class="material-symbols-rounded">upload_file</span>議事録をアップロード</div>', unsafe_allow_html=True)
         uploaded = st.file_uploader(
             "テキストファイル (.txt / .md)",
             type=["txt", "md"],
@@ -324,7 +493,7 @@ with col_input:
         )
 
     elif mode == "既存修正":
-        st.subheader("📎 ファイルをアップロード")
+        st.markdown('<div class="section-label"><span class="material-symbols-rounded">upload_file</span>ファイルをアップロード</div>', unsafe_allow_html=True)
         existing_file = st.file_uploader(
             "既存マニュアル (.md) *必須",
             type=["txt", "md"],
@@ -338,7 +507,7 @@ with col_input:
         )
 
     else:  # チェックのみ
-        st.subheader("📎 チェック対象マニュアル")
+        st.markdown('<div class="section-label"><span class="material-symbols-rounded">fact_check</span>チェック対象マニュアル</div>', unsafe_allow_html=True)
         check_file = st.file_uploader(
             "マニュアルファイル (.md)",
             type=["txt", "md"],
@@ -347,7 +516,7 @@ with col_input:
 
 with col_options:
     if mode == "新規作成":
-        st.subheader("オプション")
+        st.markdown('<div class="section-label"><span class="material-symbols-rounded">settings</span>オプション</div>', unsafe_allow_html=True)
         manual_type = st.radio(
             "種別",
             ["業務マニュアル", "操作マニュアル", "人材育成マニュアル"],
@@ -632,27 +801,28 @@ def render_progress() -> str:
 
     for i, (key, label) in enumerate(steps):
         status = st.session_state.step_status.get(key, "pending")
+        num = f"{i + 1:02d}"
 
         if status == "done":
-            dot_class = "dot-done"
+            num_class = "num-done"
             step_class = "done"
-            icon = "✓"
+            inner = '<span class="material-symbols-rounded">check</span>'
         elif status == "running":
-            dot_class = "dot-running"
+            num_class = "num-running"
             step_class = "running"
-            icon = "›"
+            inner = num
         elif status == "error":
-            dot_class = "dot-error"
+            num_class = "num-error"
             step_class = "error"
-            icon = "!"
+            inner = '<span class="material-symbols-rounded" style="font-size:16px">close</span>'
         else:
-            dot_class = "dot-pending"
+            num_class = "num-pending"
             step_class = ""
-            icon = str(i + 1)
+            inner = num
 
         html_parts.append(f'''
             <div class="pipeline-step {step_class}">
-                <div class="step-dot {dot_class}">{icon}</div>
+                <div class="step-num {num_class}">{inner}</div>
                 <span>{label}</span>
             </div>
         ''')
@@ -670,7 +840,7 @@ progress_placeholder = st.empty()
 
 # 実行ボタン
 error_msg = validate_inputs()
-if st.button("▶ 実行", type="primary", use_container_width=True, disabled=bool(error_msg)):
+if st.button("実行する", type="primary", use_container_width=True, disabled=bool(error_msg)):
     st.session_state.step_status = {}
     st.session_state.results = {}
 
@@ -722,12 +892,9 @@ if results:
     error_count = sum(1 for v in st.session_state.step_status.values() if v == "error")
     if done_count > 0 and error_count == 0:
         st.markdown("""
-        <div style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
-                    border: 1px solid #6EE7B7; border-radius: 12px;
-                    padding: 1rem 1.5rem; margin-bottom: 1rem;">
-            <span style="font-size: 1.1rem; font-weight: 600; color: #065F46;">
-                完了 — 全ステップが正常に終了しました
-            </span>
+        <div class="completion-banner">
+            <span class="material-symbols-rounded">task_alt</span>
+            <span>完了 — 全ステップが正常に終了しました</span>
         </div>
         """, unsafe_allow_html=True)
 
