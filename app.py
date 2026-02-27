@@ -73,73 +73,24 @@ def get_step_icon(step_name: str) -> str:
 
 # --- サイドバー ---
 with st.sidebar:
-    st.title("⚙️ 設定")
+    st.title("⚙️ 出力設定")
 
-    st.subheader("APIキー")
-    if config.anthropic_api_key:
-        st.info(f"✅ Anthropic API Key: .envから読み込み済み（{config.anthropic_api_key[:12]}...）")
-    else:
-        api_key = st.text_input(
-            "Anthropic API Key",
-            type="password",
-            help="sk-ant-... で始まるキー",
-        )
-        if api_key:
-            config.anthropic_api_key = api_key
+    enable_notion = st.toggle("📝 Notionに出力", value=False)
+    enable_miro = st.toggle("🗺️ Miroにフロー描画", value=False)
 
-    st.divider()
-
-    st.subheader("Notion")
-    _notion_ready = bool(config.notion_secret and config.notion_parent_page_id)
-    enable_notion = st.toggle("Notionに出力", value=False)
-    if enable_notion:
-        if _notion_ready:
-            st.info(f"✅ .envから読み込み済み\n\nページID: ...{config.notion_parent_page_id[-8:]}")
-        else:
-            if not config.notion_secret:
-                notion_secret = st.text_input(
-                    "Notion Secret",
-                    type="password",
-                    help="ntn_ で始まるトークン",
-                )
-                if notion_secret:
-                    config.notion_secret = notion_secret
+    if enable_notion or enable_miro:
+        st.divider()
+        st.caption("接続状態")
+        if enable_notion:
+            if config.notion_secret and config.notion_parent_page_id:
+                st.success("Notion: 接続済み")
             else:
-                st.caption("✅ Notion Secret: 設定済み")
-            if not config.notion_parent_page_id:
-                notion_page_id = st.text_input("親ページID")
-                if notion_page_id:
-                    config.notion_parent_page_id = notion_page_id
+                st.error("Notion: 未設定（Secretsを確認）")
+        if enable_miro:
+            if config.miro_access_token and config.miro_board_id:
+                st.success("Miro: 接続済み")
             else:
-                st.caption(f"✅ 親ページID: ...{config.notion_parent_page_id[-8:]}")
-
-    st.divider()
-
-    st.subheader("Miro")
-    _miro_ready = bool(config.miro_access_token and config.miro_board_id)
-    enable_miro = st.toggle("Miroにフロー描画", value=False)
-    if enable_miro:
-        if _miro_ready:
-            st.info(f"✅ .envから読み込み済み\n\nボードID: {config.miro_board_id}")
-        else:
-            if not config.miro_access_token:
-                miro_token = st.text_input(
-                    "Miro Access Token",
-                    type="password",
-                )
-                if miro_token:
-                    config.miro_access_token = miro_token
-            else:
-                st.caption("✅ Miro Token: 設定済み")
-            if not config.miro_board_id:
-                miro_board = st.text_input("ボードID")
-                if miro_board:
-                    config.miro_board_id = miro_board
-            else:
-                st.caption(f"✅ ボードID: {config.miro_board_id}")
-
-    st.divider()
-    st.caption(".envファイルからAPIキーを自動読み込みしています。")
+                st.error("Miro: 未設定（Secretsを確認）")
 
 
 # --- メインUI ---
