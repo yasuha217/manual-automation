@@ -8,42 +8,34 @@ from dotenv import load_dotenv
 _project_root = Path(__file__).parent.parent
 load_dotenv(_project_root / ".env")
 
+# Streamlit Secretsを取得（クラウドデプロイ時）
+_st_secrets = {}
+try:
+    import streamlit as st
+    if hasattr(st, "secrets"):
+        _st_secrets = dict(st.secrets)
+except Exception:
+    pass
 
-def _get_secret(key: str, default: str = "") -> str:
+
+def _get(key: str, default: str = "") -> str:
     """環境変数 → Streamlit Secrets → デフォルト の順で取得"""
-    # 1. 環境変数（.env / OS）
-    val = os.getenv(key, "")
-    if val:
-        return val
-    # 2. Streamlit Secrets（クラウドデプロイ時）
-    try:
-        import streamlit as st
-        if hasattr(st, "secrets") and key in st.secrets:
-            return st.secrets[key]
-    except Exception:
-        pass
-    return default
+    return os.getenv(key, "") or _st_secrets.get(key, "") or default
 
 
 class Config:
     """アプリケーション設定"""
 
-    # Claude API
-    anthropic_api_key: str = _get_secret("ANTHROPIC_API_KEY")
-    claude_model: str = _get_secret("CLAUDE_MODEL", "claude-sonnet-4-20250514")
-
-    # Notion
-    notion_secret: str = _get_secret("NOTION_SECRET")
-    notion_parent_page_id: str = _get_secret("NOTION_PARENT_PAGE_ID")
-
-    # Miro
-    miro_access_token: str = _get_secret("MIRO_ACCESS_TOKEN")
-    miro_board_id: str = _get_secret("MIRO_BOARD_ID")
-
-    # パス
-    project_root: Path = _project_root
-    rules_dir: Path = _project_root / "rules"
-    output_dir: Path = _project_root / "output"
+    def __init__(self):
+        self.anthropic_api_key: str = _get("ANTHROPIC_API_KEY")
+        self.claude_model: str = _get("CLAUDE_MODEL", "claude-sonnet-4-20250514")
+        self.notion_secret: str = _get("NOTION_SECRET")
+        self.notion_parent_page_id: str = _get("NOTION_PARENT_PAGE_ID")
+        self.miro_access_token: str = _get("MIRO_ACCESS_TOKEN")
+        self.miro_board_id: str = _get("MIRO_BOARD_ID")
+        self.project_root: Path = _project_root
+        self.rules_dir: Path = _project_root / "rules"
+        self.output_dir: Path = _project_root / "output"
 
     def validate(self, require_notion: bool = False, require_miro: bool = False) -> list[str]:
         """設定の妥当性を検証し、不足項目のリストを返す"""
