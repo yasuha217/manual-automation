@@ -28,7 +28,6 @@ st.set_page_config(
 st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=M+PLUS+1p:wght@400;500;700&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
 <style>
     :root {
         --teal: #2AACB8;
@@ -121,8 +120,8 @@ st.markdown("""
         text-transform: uppercase;
         backdrop-filter: blur(4px);
     }
-    .hero-badge .material-symbols-rounded {
-        font-size: 14px;
+    .hero-badge-icon {
+        font-size: 0.8rem;
     }
 
     /* ===== Section Labels ===== */
@@ -136,9 +135,8 @@ st.markdown("""
         font-size: 1.05rem;
         margin-bottom: 0.5rem;
     }
-    .section-label .material-symbols-rounded {
-        font-size: 20px;
-        color: var(--teal);
+    .section-label-icon {
+        font-size: 1.1rem;
     }
 
     /* ===== Mode Selector ===== */
@@ -204,9 +202,6 @@ st.markdown("""
         background: var(--teal);
         color: var(--white);
         border: 2px solid var(--teal);
-    }
-    .num-done .material-symbols-rounded {
-        font-size: 16px;
     }
     .num-error {
         background: #FEF2F2;
@@ -372,9 +367,8 @@ st.markdown("""
         align-items: center;
         gap: 0.6rem;
     }
-    .completion-banner .material-symbols-rounded {
-        font-size: 22px;
-        color: var(--teal-dark);
+    .completion-banner-icon {
+        font-size: 1.2rem;
     }
     .completion-banner span {
         font-size: 0.95rem;
@@ -424,15 +418,10 @@ def get_step_icon(step_name: str) -> str:
 
 # --- サイドバー ---
 with st.sidebar:
-    st.markdown("""
-    <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.5rem;">
-        <span class="material-symbols-rounded" style="font-size:22px; color:#1E8E99;">tune</span>
-        <span style="font-family:'Zen Maru Gothic',sans-serif; font-weight:700; font-size:1.1rem; color:#1A3040;">出力設定</span>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title("⚙️ 出力設定")
 
-    enable_notion = st.toggle("Notionに出力", value=False)
-    enable_miro = st.toggle("Miroにフロー描画", value=False)
+    enable_notion = st.toggle("📝 Notionに出力", value=False)
+    enable_miro = st.toggle("🗺️ Miroにフロー描画", value=False)
 
     if enable_notion or enable_miro:
         st.divider()
@@ -454,8 +443,7 @@ with st.sidebar:
 st.markdown("""
 <div class="hero-header">
     <div class="hero-badge">
-        <span class="material-symbols-rounded">auto_awesome</span>
-        AI-Powered
+        <span class="hero-badge-icon">✦</span> AI-Powered
     </div>
     <h1>Manual Studio</h1>
     <p>議事録・MTG文字起こしから、ルール準拠のマニュアルを自動生成 → Notion / Miro に出力</p>
@@ -476,7 +464,7 @@ col_input, col_options = st.columns([3, 1])
 
 with col_input:
     if mode == "新規作成":
-        st.markdown('<div class="section-label"><span class="material-symbols-rounded">upload_file</span>議事録をアップロード</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label"><span class="section-label-icon">📎</span> 議事録をアップロード</div>', unsafe_allow_html=True)
         uploaded = st.file_uploader(
             "テキストファイル (.txt / .md)",
             type=["txt", "md"],
@@ -493,7 +481,7 @@ with col_input:
         )
 
     elif mode == "既存修正":
-        st.markdown('<div class="section-label"><span class="material-symbols-rounded">upload_file</span>ファイルをアップロード</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label"><span class="section-label-icon">📎</span> ファイルをアップロード</div>', unsafe_allow_html=True)
         existing_file = st.file_uploader(
             "既存マニュアル (.md) *必須",
             type=["txt", "md"],
@@ -507,7 +495,7 @@ with col_input:
         )
 
     else:  # チェックのみ
-        st.markdown('<div class="section-label"><span class="material-symbols-rounded">fact_check</span>チェック対象マニュアル</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label"><span class="section-label-icon">📋</span> チェック対象マニュアル</div>', unsafe_allow_html=True)
         check_file = st.file_uploader(
             "マニュアルファイル (.md)",
             type=["txt", "md"],
@@ -516,7 +504,7 @@ with col_input:
 
 with col_options:
     if mode == "新規作成":
-        st.markdown('<div class="section-label"><span class="material-symbols-rounded">settings</span>オプション</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-label"><span class="section-label-icon">⚙️</span> オプション</div>', unsafe_allow_html=True)
         manual_type = st.radio(
             "種別",
             ["業務マニュアル", "操作マニュアル", "人材育成マニュアル"],
@@ -806,7 +794,7 @@ def render_progress() -> str:
         if status == "done":
             num_class = "num-done"
             step_class = "done"
-            inner = '<span class="material-symbols-rounded">check</span>'
+            inner = '✓'
         elif status == "running":
             num_class = "num-running"
             step_class = "running"
@@ -814,7 +802,7 @@ def render_progress() -> str:
         elif status == "error":
             num_class = "num-error"
             step_class = "error"
-            inner = '<span class="material-symbols-rounded" style="font-size:16px">close</span>'
+            inner = '✕'
         else:
             num_class = "num-pending"
             step_class = ""
@@ -893,7 +881,7 @@ if results:
     if done_count > 0 and error_count == 0:
         st.markdown("""
         <div class="completion-banner">
-            <span class="material-symbols-rounded">task_alt</span>
+            <span class="completion-banner-icon">✅</span>
             <span>完了 — 全ステップが正常に終了しました</span>
         </div>
         """, unsafe_allow_html=True)
