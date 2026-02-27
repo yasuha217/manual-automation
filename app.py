@@ -95,18 +95,6 @@ with st.sidebar:
             else:
                 st.error("Miro: 未設定（Secretsを確認）")
 
-    # デバッグ（問題解決後に削除）
-    with st.expander("🔍 デバッグ情報"):
-        st.text(f"API Key: {'あり' if config.anthropic_api_key else 'なし'}")
-        st.text(f"Notion Secret: {'あり' if config.notion_secret else 'なし'}")
-        st.text(f"Notion Page ID: {'あり' if config.notion_parent_page_id else 'なし'}")
-        st.text(f"Miro Token: {'あり' if config.miro_access_token else 'なし'}")
-        st.text(f"Miro Board: {'あり' if config.miro_board_id else 'なし'}")
-        try:
-            secrets_keys = list(st.secrets.keys())
-            st.text(f"Secrets keys: {secrets_keys}")
-        except Exception as e:
-            st.text(f"Secrets error: {e}")
 
 
 # --- メインUI ---
