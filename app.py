@@ -56,7 +56,7 @@ st.markdown("""
     h1, h2, h3, h4 {
         font-family: 'Zen Maru Gothic', 'M PLUS 1p', sans-serif !important;
     }
-    .stApp p, .stApp span, .stApp label, .stApp div {
+    .stApp p, .stApp label {
         font-family: 'M PLUS 1p', sans-serif;
     }
 
