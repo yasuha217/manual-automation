@@ -18,31 +18,213 @@ config.reload()
 
 # --- ページ設定 ---
 st.set_page_config(
-    page_title="マニュアル自動作成ツール",
-    page_icon="📋",
+    page_title="Manual Studio",
+    page_icon="https://em-content.zobj.net/source/twitter/408/memo_1f4dd.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # --- カスタムCSS ---
 st.markdown("""
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-    .stApp { max-width: 1200px; margin: 0 auto; }
-    .step-done { color: #22c55e; }
-    .step-running { color: #3b82f6; }
-    .step-pending { color: #9ca3af; }
-    .result-card {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin: 0.5rem 0;
+    /* ===== Base ===== */
+    .stApp {
+        max-width: 1100px;
+        margin: 0 auto;
+        font-family: 'Noto Sans JP', 'Plus Jakarta Sans', sans-serif;
     }
+    h1, h2, h3, h4 {
+        font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif !important;
+        letter-spacing: -0.02em;
+    }
+
+    /* ===== Hero Header ===== */
+    .hero-header {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+        border-radius: 16px;
+        padding: 2rem 2.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .hero-header h1 {
+        color: #F8FAFC;
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+        position: relative;
+    }
+    .hero-header p {
+        color: #94A3B8;
+        font-size: 0.9rem;
+        margin: 0;
+        position: relative;
+    }
+    .hero-badge {
+        display: inline-block;
+        background: rgba(99,102,241,0.2);
+        color: #A5B4FC;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.6rem;
+        border-radius: 100px;
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    /* ===== Mode Selector ===== */
+    div[data-testid="stSegmentedControl"] button {
+        font-family: 'Noto Sans JP', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        border-radius: 10px !important;
+        padding: 0.5rem 1.25rem !important;
+    }
+
+    /* ===== Cards ===== */
+    .upload-card {
+        background: #FFFFFF;
+        border: 1.5px dashed #CBD5E1;
+        border-radius: 14px;
+        padding: 1.5rem;
+        transition: border-color 0.2s;
+    }
+    .upload-card:hover {
+        border-color: #6366F1;
+    }
+
+    /* ===== Progress Pipeline ===== */
+    .pipeline-container {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        padding: 1.25rem 1.5rem;
+        margin: 1rem 0;
+    }
+    .pipeline-step {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+        color: #64748B;
+        transition: all 0.2s;
+    }
+    .pipeline-step.done { color: #0F172A; font-weight: 500; }
+    .pipeline-step.running { color: #6366F1; font-weight: 600; }
+    .pipeline-step.error { color: #EF4444; }
+    .step-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+    .dot-pending { background: #F1F5F9; color: #94A3B8; border: 2px solid #E2E8F0; }
+    .dot-running { background: #EEF2FF; color: #6366F1; border: 2px solid #6366F1; animation: pulse 1.5s infinite; }
+    .dot-done { background: #6366F1; color: white; border: 2px solid #6366F1; }
+    .dot-error { background: #FEF2F2; color: #EF4444; border: 2px solid #EF4444; }
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(99,102,241,0.3); }
+        50% { box-shadow: 0 0 0 6px rgba(99,102,241,0); }
+    }
+    .step-connector {
+        width: 2px;
+        height: 12px;
+        background: #E2E8F0;
+        margin-left: 13px;
+    }
+    .step-connector.done { background: #6366F1; }
+
+    /* ===== Metrics ===== */
     div[data-testid="stMetric"] {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1rem;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    div[data-testid="stMetric"] label {
+        font-size: 0.75rem !important;
+        color: #64748B !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* ===== Link Buttons ===== */
+    .stLinkButton a {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* ===== Sidebar ===== */
+    section[data-testid="stSidebar"] {
+        background: #0F172A;
+    }
+    section[data-testid="stSidebar"] * {
+        color: #E2E8F0 !important;
+    }
+    section[data-testid="stSidebar"] .stAlert p {
+        font-size: 0.8rem !important;
+    }
+
+    /* ===== Tabs ===== */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0.5rem;
+    }
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 10px 10px 0 0 !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+    }
+
+    /* ===== File Uploader ===== */
+    div[data-testid="stFileUploader"] {
+        border-radius: 12px;
+    }
+    div[data-testid="stFileUploader"] section {
+        border-radius: 12px !important;
+        border: 1.5px dashed #CBD5E1 !important;
+        padding: 1.25rem !important;
+    }
+
+    /* ===== Button ===== */
+    .stButton > button[kind="primary"] {
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        padding: 0.75rem !important;
+        letter-spacing: 0.02em;
+        box-shadow: 0 4px 14px rgba(99,102,241,0.25);
+        transition: all 0.2s;
+    }
+    .stButton > button[kind="primary"]:hover {
+        box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+        transform: translateY(-1px);
+    }
+
+    /* ===== Download Button ===== */
+    .stDownloadButton > button {
+        border-radius: 10px !important;
+        font-weight: 600 !important;
+        border: 1.5px solid #E2E8F0 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -60,6 +242,11 @@ if "running" not in st.session_state:
 def update_step(step_name: str, status: str):
     """ステップ状態を更新"""
     st.session_state.step_status[step_name] = status
+
+
+def _update_progress():
+    """進行状況HTMLを再描画"""
+    progress_placeholder.markdown(render_progress(), unsafe_allow_html=True)
 
 
 def get_step_icon(step_name: str) -> str:
@@ -98,8 +285,13 @@ with st.sidebar:
 
 
 # --- メインUI ---
-st.title("📋 マニュアル自動作成ツール")
-st.caption("議事録・MTG文字起こしから、ルール準拠のマニュアルを自動生成します")
+st.markdown("""
+<div class="hero-header">
+    <div class="hero-badge">AI-Powered</div>
+    <h1>Manual Studio</h1>
+    <p>議事録・MTG文字起こしから、ルール準拠のマニュアルを自動生成 → Notion / Miro に出力</p>
+</div>
+""", unsafe_allow_html=True)
 
 # モード選択
 mode = st.segmented_control(
@@ -169,7 +361,7 @@ st.divider()
 def validate_inputs() -> str | None:
     """入力バリデーション。エラーメッセージを返す。"""
     if not config.anthropic_api_key:
-        return "サイドバーでAnthropic APIキーを設定してください"
+        return "ANTHROPIC_API_KEY が未設定です（.env または Secrets を確認）"
     if mode == "新規作成":
         if not uploaded and not pasted:
             return "議事録ファイルをアップロードするか、テキストを貼り付けてください"
@@ -191,7 +383,7 @@ def validate_inputs() -> str | None:
 def _run_miro_extract(final: str, ts: str, output_dir: Path):
     """マニュアルからMiroフローデータを抽出"""
     update_step("miro_extract", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     from src.utils.markdown_parser import extract_section
     from src.prompts.custom import get_flowchart_extract_prompt
     from src.utils.claude_client import call_claude
@@ -207,13 +399,13 @@ def _run_miro_extract(final: str, ts: str, output_dir: Path):
         st.session_state.results["flowchart_json"] = fc_json
         st.session_state.results["flowchart_path"] = str(fc_path)
     update_step("miro_extract", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
 
 def _run_notion_push(manual_title: str, final: str):
     """Notionにページを作成"""
     update_step("notion", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     try:
         from src.integrations.notion_client import create_notion_page
         url = create_notion_page(manual_title, final)
@@ -222,13 +414,13 @@ def _run_notion_push(manual_title: str, final: str):
     except Exception as e:
         st.session_state.results["notion_error"] = str(e)
         update_step("notion", "error")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
 
 def _run_miro_push(fc_json: str):
     """Miroにフローチャートを描画"""
     update_step("miro_push", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     try:
         from src.integrations.miro_client import create_flowchart_from_json
         miro_url = create_flowchart_from_json(fc_json)
@@ -237,7 +429,7 @@ def _run_miro_push(fc_json: str):
     except Exception as e:
         st.session_state.results["miro_error"] = str(e)
         update_step("miro_push", "error")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
 
 def run_create_pipeline(minutes_text: str, manual_title: str, m_type: str):
@@ -251,23 +443,23 @@ def run_create_pipeline(minutes_text: str, manual_title: str, m_type: str):
 
     # Step 1: 構造化抽出
     update_step("step1", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     structured = run_analyze(minutes_text, m_type, verbose=False)
     (output_dir / f"{ts}_step1_analysis.json").write_text(structured, encoding="utf-8")
     st.session_state.results["analysis"] = structured
     update_step("step1", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     # Step 2: マニュアル生成（一発完成版）
     update_step("step2", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     final = run_draft(structured, verbose=False)
     final_path = output_dir / f"{ts}_{manual_title}.md"
     final_path.write_text(final, encoding="utf-8")
     st.session_state.results["final"] = final
     st.session_state.results["final_path"] = str(final_path)
     update_step("step2", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     # Miroフローデータ抽出
     _run_miro_extract(final, ts, output_dir)
@@ -302,50 +494,50 @@ def run_update_pipeline(existing_text: str, minutes_text: str | None):
 
         # Step 1: 差分分析
         update_step("step1", "running")
-        progress_placeholder.markdown(render_progress())
+        _update_progress()
         updates = run_merge_analyze(existing_text, minutes_text, verbose=False)
         (output_dir / f"{ts}_step1_updates.json").write_text(updates, encoding="utf-8")
         update_step("step1", "done")
-        progress_placeholder.markdown(render_progress())
+        _update_progress()
 
         # Step 2: 更新草稿
         update_step("step2", "running")
-        progress_placeholder.markdown(render_progress())
+        _update_progress()
         draft = run_update_draft(existing_text, updates, verbose=False)
         (output_dir / f"{ts}_step2_draft.md").write_text(draft, encoding="utf-8")
         st.session_state.results["draft"] = draft
         update_step("step2", "done")
-        progress_placeholder.markdown(render_progress())
+        _update_progress()
     else:
         # --- パターンB: 議事録なし（既存マニュアルのみ） ---
         draft = existing_text
 
     # チェック → 改善 → 適用（共通）
     update_step("check", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     check_result = run_check(draft, verbose=False)
     (output_dir / f"{ts}_check.md").write_text(check_result, encoding="utf-8")
     st.session_state.results["check"] = check_result
     update_step("check", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     update_step("improve", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     improve_result = run_improve(draft, check_result, verbose=False)
     (output_dir / f"{ts}_improve.md").write_text(improve_result, encoding="utf-8")
     st.session_state.results["improve"] = improve_result
     update_step("improve", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     update_step("apply", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     final = run_apply(draft, improve_result, verbose=False)
     final_path = output_dir / f"{ts}_updated_manual.md"
     final_path.write_text(final, encoding="utf-8")
     st.session_state.results["final"] = final
     st.session_state.results["final_path"] = str(final_path)
     update_step("apply", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     # Miroフローデータ抽出
     _run_miro_extract(final, ts, output_dir)
@@ -369,33 +561,33 @@ def run_check_only(manual_text: str):
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     update_step("check", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     check_result = run_check(manual_text, verbose=False)
     (output_dir / f"{ts}_check.md").write_text(check_result, encoding="utf-8")
     st.session_state.results["check"] = check_result
     update_step("check", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
     update_step("improve", "running")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
     improve_result = run_improve(manual_text, check_result, verbose=False)
     (output_dir / f"{ts}_improve.md").write_text(improve_result, encoding="utf-8")
     st.session_state.results["improve"] = improve_result
     update_step("improve", "done")
-    progress_placeholder.markdown(render_progress())
+    _update_progress()
 
 
 # ============================================================
 # 進行状況表示
 # ============================================================
 
-def render_progress() -> str:
-    """進行状況の表示テキスト"""
+def _get_steps_for_mode():
+    """現在のモードに応じたステップリストを返す"""
     if mode == "新規作成":
         steps = [
             ("step1", "構造化抽出"),
             ("step2", "マニュアル生成"),
-            ("miro_extract", "Miroフローデータ生成"),
+            ("miro_extract", "フローデータ生成"),
         ]
         if enable_notion:
             steps.append(("notion", "Notion出力"))
@@ -403,40 +595,74 @@ def render_progress() -> str:
             steps.append(("miro_push", "Miro描画"))
 
     elif mode == "既存修正":
-        # 議事録の有無で表示を分岐
         has_minutes = st.session_state.get("_update_has_minutes", False)
         if has_minutes:
             steps = [
                 ("step1", "差分分析"),
                 ("step2", "更新草稿生成"),
-                ("check", "適合性チェック（26項目）"),
-                ("improve", "改善提案生成"),
-                ("apply", "改善適用 → 最終版"),
-                ("miro_extract", "Miroフローデータ生成"),
+                ("check", "適合性チェック"),
+                ("improve", "改善提案"),
+                ("apply", "改善適用"),
+                ("miro_extract", "フローデータ生成"),
             ]
         else:
             steps = [
-                ("check", "適合性チェック（26項目）"),
-                ("improve", "改善提案生成"),
-                ("apply", "改善適用 → 最終版"),
-                ("miro_extract", "Miroフローデータ生成"),
+                ("check", "適合性チェック"),
+                ("improve", "改善提案"),
+                ("apply", "改善適用"),
+                ("miro_extract", "フローデータ生成"),
             ]
         if enable_notion:
             steps.append(("notion", "Notion出力"))
         if enable_miro:
             steps.append(("miro_push", "Miro描画"))
 
-    else:  # チェックのみ
+    else:
         steps = [
-            ("check", "適合性チェック（26項目）"),
-            ("improve", "改善提案生成"),
+            ("check", "適合性チェック"),
+            ("improve", "改善提案"),
         ]
+    return steps
 
-    lines = []
-    for key, label in steps:
-        icon = get_step_icon(key)
-        lines.append(f"{icon} {label}")
-    return "\n\n".join(lines)
+
+def render_progress() -> str:
+    """パイプライン風の進行状況HTML"""
+    steps = _get_steps_for_mode()
+    html_parts = ['<div class="pipeline-container">']
+
+    for i, (key, label) in enumerate(steps):
+        status = st.session_state.step_status.get(key, "pending")
+
+        if status == "done":
+            dot_class = "dot-done"
+            step_class = "done"
+            icon = "✓"
+        elif status == "running":
+            dot_class = "dot-running"
+            step_class = "running"
+            icon = "›"
+        elif status == "error":
+            dot_class = "dot-error"
+            step_class = "error"
+            icon = "!"
+        else:
+            dot_class = "dot-pending"
+            step_class = ""
+            icon = str(i + 1)
+
+        html_parts.append(f'''
+            <div class="pipeline-step {step_class}">
+                <div class="step-dot {dot_class}">{icon}</div>
+                <span>{label}</span>
+            </div>
+        ''')
+
+        if i < len(steps) - 1:
+            conn_class = "done" if status == "done" else ""
+            html_parts.append(f'<div class="step-connector {conn_class}"></div>')
+
+    html_parts.append('</div>')
+    return ''.join(html_parts)
 
 
 # 進行状況プレースホルダー
@@ -490,7 +716,20 @@ results = st.session_state.results
 
 if results:
     st.divider()
-    st.subheader("📊 結果")
+
+    # 完了バナー
+    done_count = sum(1 for v in st.session_state.step_status.values() if v == "done")
+    error_count = sum(1 for v in st.session_state.step_status.values() if v == "error")
+    if done_count > 0 and error_count == 0:
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+                    border: 1px solid #6EE7B7; border-radius: 12px;
+                    padding: 1rem 1.5rem; margin-bottom: 1rem;">
+            <span style="font-size: 1.1rem; font-weight: 600; color: #065F46;">
+                完了 — 全ステップが正常に終了しました
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
 
     # メトリクス行
     if results.get("check"):
@@ -505,11 +744,11 @@ if results:
         with col2:
             st.metric("総合評価", grade)
         with col3:
-            step_count = sum(1 for v in st.session_state.step_status.values() if v == "done")
-            st.metric("完了ステップ", f"{step_count}")
+            st.metric("完了ステップ", f"{done_count}")
 
-    # リンク
+    # 出力リンク
     if results.get("notion_url") or results.get("miro_url"):
+        st.markdown("")  # spacing
         link_cols = st.columns(2)
         if results.get("notion_url"):
             with link_cols[0]:
