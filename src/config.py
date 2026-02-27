@@ -8,19 +8,19 @@ from dotenv import load_dotenv
 _project_root = Path(__file__).parent.parent
 load_dotenv(_project_root / ".env")
 
-# Streamlit Secretsを取得（クラウドデプロイ時）
-_st_secrets = {}
-try:
-    import streamlit as st
-    if hasattr(st, "secrets"):
-        _st_secrets = dict(st.secrets)
-except Exception:
-    pass
-
 
 def _get(key: str, default: str = "") -> str:
     """環境変数 → Streamlit Secrets → デフォルト の順で取得"""
-    return os.getenv(key, "") or _st_secrets.get(key, "") or default
+    # 1. 環境変数（ローカル .env）
+    val = os.getenv(key, "")
+    if val:
+        return val
+    # 2. Streamlit Secrets（クラウド）
+    try:
+        import streamlit as st
+        return str(st.secrets[key])
+    except Exception:
+        return default
 
 
 class Config:
