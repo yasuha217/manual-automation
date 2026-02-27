@@ -27,15 +27,19 @@ class Config:
     """アプリケーション設定"""
 
     def __init__(self):
+        self.project_root: Path = _project_root
+        self.rules_dir: Path = _project_root / "rules"
+        self.output_dir: Path = _project_root / "output"
+        self.reload()
+
+    def reload(self):
+        """APIキーを再読み込みする（Streamlit Secrets対応）"""
         self.anthropic_api_key: str = _get("ANTHROPIC_API_KEY")
         self.claude_model: str = _get("CLAUDE_MODEL", "claude-sonnet-4-20250514")
         self.notion_secret: str = _get("NOTION_SECRET")
         self.notion_parent_page_id: str = _get("NOTION_PARENT_PAGE_ID")
         self.miro_access_token: str = _get("MIRO_ACCESS_TOKEN")
         self.miro_board_id: str = _get("MIRO_BOARD_ID")
-        self.project_root: Path = _project_root
-        self.rules_dir: Path = _project_root / "rules"
-        self.output_dir: Path = _project_root / "output"
 
     def validate(self, require_notion: bool = False, require_miro: bool = False) -> list[str]:
         """設定の妥当性を検証し、不足項目のリストを返す"""

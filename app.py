@@ -13,6 +13,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from src.config import config
 
+# Streamlit Cloud: Secrets が利用可能になった後にリロード
+config.reload()
+
 # --- ページ設定 ---
 st.set_page_config(
     page_title="マニュアル自動作成ツール",
